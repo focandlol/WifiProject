@@ -6,7 +6,7 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-@ToString
+//@ToString
 public class WifiDto {
     private Integer wifiId;
     private String xSwifiMgrNo;

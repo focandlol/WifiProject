@@ -22,3 +22,6 @@ wifi 상세 정보 보기
 - # ERD   
 ![erd](https://github.com/user-attachments/assets/f381d281-07bd-43bb-b6e0-b5c1d26a6670)
 
+- # 사용한 db
+src/main/wifi.db 다운
+

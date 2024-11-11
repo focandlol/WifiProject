@@ -36,7 +36,6 @@ public class APIService {
         }
 
         result = (JSONObject) new JSONParser().parse(sb.toString());
-
         JSONObject data = (JSONObject) result.get("TbPublicWifiInfo");
         int getTotal = Integer.parseInt( data.get("list_total_count").toString());
 
@@ -56,6 +55,11 @@ public class APIService {
 
         for (int i = 0; i <= endPage; i++) {
             start = (int) Math.pow(10, 3) * i + 1;
+            URL url = null;
+            HttpURLConnection con= null;
+            JSONObject result = null;
+            StringBuilder sb = new StringBuilder();
+
             if(i == endPage){
                 end = start + remain - 1;
             }
@@ -65,11 +69,6 @@ public class APIService {
             String getUrl = "http://openapi.seoul.go.kr:8088/486948787a666f633531454854726c/" +
                     "json/TbPublicWifiInfo/";
             getUrl = getUrl + start + "/" + end + "/";
-
-            URL url = null;
-            HttpURLConnection con= null;
-            JSONObject result = null;
-            StringBuilder sb = new StringBuilder();
 
             try {
                 url = new URL(getUrl);

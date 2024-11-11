@@ -14,14 +14,14 @@ import static org.example.wifiproject.db.Db.getConnection;
 
 public class HistoryService {
     public static void addHistory(PositionDto positionDto){
-        Connection connection = null;
+        Connection con = null;
         PreparedStatement pstmt = null;
         try{
-            connection = getConnection();
+            con = getConnection();
 
             String sql = " insert into history ( lat, lnt, select_date) " +
                     "values (?, ?, ?);";
-            pstmt = connection.prepareStatement(sql);
+            pstmt = con.prepareStatement(sql);
 
             pstmt.setDouble(1, positionDto.getLat());
             pstmt.setDouble(2, positionDto.getLnt());
@@ -32,20 +32,20 @@ public class HistoryService {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         } finally{
-            close(null,pstmt,connection);
+            close(null,pstmt,con);
         }
     }
 
     public int deleteHistory(String id){
-        Connection connection = null;
+        Connection con = null;
         PreparedStatement pstmt = null;
         int affected = 0;
         try{
 
-            connection = getConnection();
+            con = getConnection();
 
             String sql = " delete from history where history_id = ?";
-            pstmt = connection.prepareStatement(sql);
+            pstmt = con.prepareStatement(sql);
 
             pstmt.setInt(1, Integer.parseInt(id));
             affected = pstmt.executeUpdate();
@@ -54,23 +54,23 @@ public class HistoryService {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         } finally{
-            close(null,pstmt,connection);
+            close(null,pstmt,con);
         }
         return affected;
     }
 
     public List<HistoryDto> getHistoryList() {
-        Connection connection = null;
+        Connection con = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
         List<HistoryDto> historyDtoList = new ArrayList<>();
         try{
 
-            connection = getConnection();
+            con = getConnection();
 
             String sql = "select * from history order by history_id desc";
-            pstmt = connection.prepareStatement(sql);
+            pstmt = con.prepareStatement(sql);
             rs = pstmt.executeQuery();
 
             while (rs.next()) {
@@ -87,22 +87,22 @@ public class HistoryService {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         } finally{
-            close(rs,pstmt,connection);
+            close(rs,pstmt,con);
         }
         return historyDtoList;
     }
 
     public HistoryDto getHistoryById(String historyId) {
-        Connection connection = null;
+        Connection con = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         HistoryDto historyDto = null;
         try{
 
-            connection = getConnection();
+            con = getConnection();
 
             String sql = "select * from history where history_id=?";
-            pstmt = connection.prepareStatement(sql);
+            pstmt = con.prepareStatement(sql);
             pstmt.setInt(1, Integer.parseInt(historyId));
             rs = pstmt.executeQuery();
 
@@ -118,7 +118,7 @@ public class HistoryService {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         } finally{
-            close(rs,pstmt,connection);
+            close(rs,pstmt,con);
         }
         return historyDto;
     }

@@ -15,17 +15,17 @@ import static org.example.wifiproject.db.Db.getConnection;
 public class BookmarkGroupService {
 
     public List<BookmarkGroupDto> getBookmarkGroupList() {
-        Connection connection = null;
+        Connection con = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
         List<BookmarkGroupDto> bookmarkGroupDtoList = new ArrayList<>();
         try{
 
-            connection = getConnection();
+            con = getConnection();
 
             String sql = "select * from bookmark_group order by sequence";
-            pstmt = connection.prepareStatement(sql);
+            pstmt = con.prepareStatement(sql);
             rs = pstmt.executeQuery();
 
             while (rs.next()) {
@@ -45,22 +45,22 @@ public class BookmarkGroupService {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         } finally{
-            close(rs,pstmt,connection);
+            close(rs,pstmt,con);
         }
         return bookmarkGroupDtoList;
     }
 
     public BookmarkGroupDto getBookmarkGroupById(String groupId) {
-        Connection connection = null;
+        Connection con = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         BookmarkGroupDto bookmarkGroupDto = null;
         try{
 
-            connection = getConnection();
+            con = getConnection();
 
             String sql = "select * from bookmark_group where group_id=?";
-            pstmt = connection.prepareStatement(sql);
+            pstmt = con.prepareStatement(sql);
             pstmt.setInt(1, Integer.parseInt(groupId));
             rs = pstmt.executeQuery();
 
@@ -80,21 +80,21 @@ public class BookmarkGroupService {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         } finally{
-            close(rs,pstmt,connection);
+            close(rs,pstmt,con);
         }
         return bookmarkGroupDto;
     }
 
     public int addBookmarkGroup(AddBookmarkGroupSubmitDto addBookmarkGroupSubmitDto){
-        Connection connection = null;
+        Connection con = null;
         PreparedStatement pstmt = null;
         int affected = 0;
         try{
-            connection = getConnection();
+            con = getConnection();
 
             String sql = " insert into bookmark_group ( group_name, sequence, created) " +
                     "values (?, ?, ?)";
-            pstmt = connection.prepareStatement(sql);
+            pstmt = con.prepareStatement(sql);
 
             pstmt.setString(1, addBookmarkGroupSubmitDto.getGroupName());
             pstmt.setInt(2, addBookmarkGroupSubmitDto.getSequence());
@@ -106,21 +106,21 @@ public class BookmarkGroupService {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         } finally{
-            close(null,pstmt,connection);
+            close(null,pstmt,con);
         }
         return affected;
     }
 
     public int updateBookmarkGroup(BookmarkGroupUpdateDto bookmarkGroupUpdateDto){
-        Connection connection = null;
+        Connection con = null;
         PreparedStatement pstmt = null;
         int affected = 0;
         try{
-            connection = getConnection();
+            con = getConnection();
 
             String sql = "update bookmark_group set group_name = ?, sequence = ?, modified = ? " +
                     "where group_id = ?";
-            pstmt = connection.prepareStatement(sql);
+            pstmt = con.prepareStatement(sql);
 
             pstmt.setString(1, bookmarkGroupUpdateDto.getGroupName());
             pstmt.setInt(2, bookmarkGroupUpdateDto.getSequence());
@@ -133,20 +133,20 @@ public class BookmarkGroupService {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         } finally{
-            close(null,pstmt,connection);
+            close(null,pstmt,con);
         }
         return affected;
     }
 
     public int deleteBookmarkGroup(String groupId){
-        Connection connection = null;
+        Connection con = null;
         PreparedStatement pstmt = null;
         int affected = 0;
         try{
-            connection = getConnection();
+            con = getConnection();
 
             String sql = "delete from bookmark_group where group_id = ?";
-            pstmt = connection.prepareStatement(sql);
+            pstmt = con.prepareStatement(sql);
 
             pstmt.setInt(1, Integer.parseInt(groupId));
             affected = pstmt.executeUpdate();
@@ -155,7 +155,7 @@ public class BookmarkGroupService {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         } finally{
-            close(null,pstmt,connection);
+            close(null,pstmt,con);
         }
         return affected;
     }

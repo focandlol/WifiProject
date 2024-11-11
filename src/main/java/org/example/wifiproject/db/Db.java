@@ -9,7 +9,7 @@ public class Db {
         return DriverManager.getConnection(url);
     }
 
-    public static void close(ResultSet rs, PreparedStatement pstmt, Connection connection) {
+    public static void close(ResultSet rs, PreparedStatement pstmt, Connection con) {
         try {
             if (rs != null && !rs.isClosed()) {
                 rs.close();
@@ -25,8 +25,8 @@ public class Db {
             e.printStackTrace();
         }
         try {
-            if (connection != null && !connection.isClosed()) {
-                connection.close();
+            if (con != null && !con.isClosed()) {
+                con.close();
             }
         } catch (SQLException e) {
             e.printStackTrace();

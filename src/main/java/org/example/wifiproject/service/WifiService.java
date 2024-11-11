@@ -18,17 +18,17 @@ import static org.example.wifiproject.service.HistoryService.addHistory;
 
 public class WifiService {
     public static int addWifi(JSONArray jsonArray){
-        Connection connection = null;
+        Connection con = null;
         PreparedStatement pstmt = null;
         int count = 0;
         try{
-            connection = getConnection();
-            connection.setAutoCommit(false);
+            con = getConnection();
+            con.setAutoCommit(false);
             String sql = " insert into wifi "
                     + " ( x_swifi_mgr_no, x_swifi_wrdofc, x_swifi_main_nm, x_swifi_adres1, x_swifi_adres2, x_swifi_instl_floor, x_swifi_instl_ty, "
                     + " x_swifi_instl_mby, x_swifi_svc_se, x_swifi_cmcwr, x_swifi_cnstc_year, x_swifi_inout_door, x_swifi_remars3, lat, lnt, work_dttm) "
                     + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            pstmt = connection.prepareStatement(sql);
+            pstmt = con.prepareStatement(sql);
 
             for (int i = 0; i < jsonArray.size(); i++) {
 
@@ -56,30 +56,30 @@ public class WifiService {
                 if ((i + 1) % 1000 == 0) {
                     int[] result = pstmt.executeBatch();
                     count += result.length;
-                    connection.commit();
+                    con.commit();
                 }
             }
             int[] result = pstmt.executeBatch();
             count += result.length;
-            connection.commit();
+            con.commit();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         } finally{
-            close(null,pstmt,connection);
+            close(null,pstmt,con);
         }
         return count;
     }
 
     public List<WifiDto> getWifiListByPosition(PositionDto positionDto) {
         //addHistory(positionDto);
-        Connection connection = null;
+        Connection con = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         List<WifiDto> wifiDtoList = new ArrayList<WifiDto>();
         try{
-            connection = getConnection();
+            con = getConnection();
 
             String sql = "select *, " +
                     "ROUND(6371 * ACOS(COS(RADIANS(?)) * COS(RADIANS(lat)) * COS(RADIANS(lnt) - RADIANS(?)) + SIN(RADIANS(?)) * SIN(RADIANS(lat))),4) distance " +
@@ -88,7 +88,7 @@ public class WifiService {
                     "order by " +
                     "    distance " +
                     "limit 20";
-            pstmt = connection.prepareStatement(sql);
+            pstmt = con.prepareStatement(sql);
             pstmt.setDouble(1, positionDto.getLat());
             pstmt.setDouble(2, positionDto.getLnt());
             pstmt.setDouble(3, positionDto.getLat());
@@ -123,22 +123,22 @@ public class WifiService {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         } finally{
-            close(rs,pstmt,connection);
+            close(rs,pstmt,con);
         }
         addHistory(positionDto);
         return wifiDtoList;
     }
 
     public WifiDto getDetailWifi(String id, String distance) {
-        Connection connection = null;
+        Connection con = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         WifiDto wifiDto = null;
         try{
-            connection = getConnection();
+            con = getConnection();
 
             String sql = "select * from wifi where wifi_id=?";
-            pstmt = connection.prepareStatement(sql);
+            pstmt = con.prepareStatement(sql);
             pstmt.setInt(1, Integer.parseInt(id));
 
             rs = pstmt.executeQuery();
@@ -174,7 +174,7 @@ public class WifiService {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         } finally{
-            close(rs,pstmt,connection);
+            close(rs,pstmt,con);
         }
         return wifiDto;
     }
